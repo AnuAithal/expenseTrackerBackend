@@ -1,8 +1,13 @@
 package com.example.expenseTracker.expenseTracker.controller;
 
+import com.example.expenseTracker.expenseTracker.dto.UserInputDto;
+import com.example.expenseTracker.expenseTracker.dto.UserOutputDto;
 import com.example.expenseTracker.expenseTracker.model.Category;
 import com.example.expenseTracker.expenseTracker.model.User;
 import com.example.expenseTracker.expenseTracker.repository.UserRepository;
+import com.example.expenseTracker.expenseTracker.services.UserService;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,30 +19,27 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/users")
+@Data
+@RequiredArgsConstructor
 public class UserController {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @GetMapping
+    public List<UserOutputDto> getAllUsers(){
+        return userService.getAllUsers();
     }
 
-    @GetMapping("/user")
-    List<User> getAllUsers(){
-        return userRepository.findAll();
+    @GetMapping("/{id}")
+    public UserOutputDto getUserById(@PathVariable Long id){
+        return userService.getUserById(id);
     }
 
-    @GetMapping("/user/{id}")
-    ResponseEntity<?> getUser(@PathVariable Long id){
-        Optional<User> user = userRepository.findById(id);
-        return user.map(response -> ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @PostMapping("/user")
-    ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
-        User result=userRepository.save(user);
-        return ResponseEntity.created(new URI("/api/user" + result.getId())).body(result);
+    @PostMapping()
+    public UserOutputDto createUser(@RequestBody UserInputDto input){
+        return userService.createUser(input);
     }
 
 

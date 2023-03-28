@@ -1,54 +1,57 @@
 package com.example.expenseTracker.expenseTracker.controller;
 
-import com.example.expenseTracker.expenseTracker.model.Category;
+import com.example.expenseTracker.expenseTracker.dto.ExpenseInputDto;
+import com.example.expenseTracker.expenseTracker.dto.ExpenseOutputDto;
 import com.example.expenseTracker.expenseTracker.model.Expenses;
-import com.example.expenseTracker.expenseTracker.repository.CategoryRepository;
 import com.example.expenseTracker.expenseTracker.repository.ExpenseRepository;
-import org.springframework.http.HttpStatus;
+import com.example.expenseTracker.expenseTracker.services.ExpenseService;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/expenses")
+@Data
 public class ExpenseController {
 
-    private ExpenseRepository expenseRepository;
+    private final ExpenseRepository expenseRepository;
+    @Autowired
+    private ExpenseService expenseService;
+
     public ExpenseController(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
     }
 
-    @GetMapping("/expenses")
-    Collection<Expenses> getAllExpenses(){
-        return expenseRepository.findAll();
+
+    @GetMapping
+    public List<ExpenseOutputDto> getAllExpenses(){
+        return expenseService.getAllExpenses();
     }
 
-    @GetMapping("/expenses/{id}")
-    ResponseEntity<?> getExpense(@PathVariable Long id){
-        Optional<Expenses> expenses = expenseRepository.findById(id);
-        return expenses.map(response -> ResponseEntity.ok().body(response)).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    @GetMapping("/{id}")
+    public ExpenseOutputDto getExpenseById(@PathVariable Long id){
+        return expenseService.getExpenseById(id);
     }
 
-    @PostMapping("/expenses")
-    ResponseEntity<Expenses> createExpense(@RequestBody Expenses expenses) throws URISyntaxException {
-        Expenses result=expenseRepository.save(expenses);
-        return ResponseEntity.created(new URI("/api/expenses" + result.getId())).body(result);
+    @PostMapping
+    public ExpenseOutputDto createExpense(@RequestBody ExpenseInputDto input){
+        return expenseService.createExpense(input);
     }
 
-    @PutMapping("/expenses/{id}")
-    ResponseEntity<Expenses> updateExpenses(@RequestBody Expenses expenses){
-        Expenses result = expenseRepository.save(expenses);
-        return ResponseEntity.ok().body(result);
+    @DeleteMapping("/{id}")
+    public ExpenseOutputDto deleteExpense(@PathVariable Long id){
+        return expenseService.deleteExpense(id);
     }
 
-    @DeleteMapping("/expenses/{id}")
-    ResponseEntity<?> deleteExpense(@PathVariable Long id){
-        expenseRepository.deleteById(id);
-        return ResponseEntity.ok().build();
+    @PutMapping("/{id}")
+    public ExpenseOutputDto updateExpense(@PathVariable Long id, @RequestBody ExpenseInputDto input){
+        return expenseService.updateExpense(id, input);
     }
+
+
 
 }

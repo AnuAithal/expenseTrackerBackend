@@ -14,9 +14,13 @@ import java.util.List;
 @Table(name="user")
 public class User {
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    @Column
     private String name;
+    @Column
     private String email;
+    @Column
     private String password;
 
 //   @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL)

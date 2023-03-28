@@ -1,15 +1,16 @@
 package com.example.expenseTracker.expenseTracker.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 @Data
 @NoArgsConstructor
@@ -18,16 +19,23 @@ import java.util.Date;
 @Table(name="expenses")
 public class Expenses {
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column
     private Long id;
-    @JsonFormat(pattern = "yyyy/MM/dd")
-    private Date expenseDate;
+    @DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+    @Column
+    private LocalDateTime expenseDate;
+    @Column
     private String description;
+    @Column
     private String amount;
 
     @ManyToOne
+    @JoinColumn(name="category_id",referencedColumnName = "id")
     private Category category;
 
     @ManyToOne
+    @JoinColumn(name="user_id",referencedColumnName = "id")
     private User user;
 
 }

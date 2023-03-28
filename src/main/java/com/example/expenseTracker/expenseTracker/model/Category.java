@@ -1,9 +1,8 @@
 package com.example.expenseTracker.expenseTracker.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
@@ -13,7 +12,11 @@ import lombok.NoArgsConstructor;
 public class Category {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column
     private Long id;
+
+    @Column
     private String name;
 
 }
