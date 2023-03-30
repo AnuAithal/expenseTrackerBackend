@@ -12,6 +12,5 @@ public class ExpenseInputDto {
     private LocalDateTime expenseDate;
     private String description;
     private String amount;
-    private Category category;
-    private UserInputDto user;
+    private Long categoryId;
 }

@@ -4,12 +4,10 @@ import com.example.expenseTracker.expenseTracker.dto.ExpenseInputDto;
 import com.example.expenseTracker.expenseTracker.dto.ExpenseOutputDto;
 import com.example.expenseTracker.expenseTracker.model.Category;
 import com.example.expenseTracker.expenseTracker.model.Expenses;
-import com.example.expenseTracker.expenseTracker.model.User;
 import com.example.expenseTracker.expenseTracker.repository.CategoryRepository;
 import com.example.expenseTracker.expenseTracker.repository.ExpenseRepository;
 import com.example.expenseTracker.expenseTracker.repository.UserRepository;
 import com.example.expenseTracker.expenseTracker.services.ExpenseService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,9 +15,8 @@ import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Data
@@ -33,20 +30,30 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final UserRepository userRepository;
 
 
+    public List<ExpenseOutputDto> getAllExpenses() {
+        List<Expenses> expenses = expenseRepository.findAll();
+        List<ExpenseOutputDto> output = new ArrayList<>();
+        for(Expenses expense : expenses){
+            ExpenseOutputDto dto = modelMapper.map(expense, ExpenseOutputDto.class);
+            if(expense.getCategory() != null){
+                dto.setCategoryId(expense.getCategory().getId());
+                dto.setCategoryName(expense.getCategory().getName());
+            }
 
-    public List<ExpenseOutputDto> getAllExpenses(){
-        List<Expenses> expenses=expenseRepository.findAll();
-        Type listType = new TypeToken<List<ExpenseOutputDto>>(){}.getType();
-        List<ExpenseOutputDto> dtoExpenseList = modelMapper.map(expenses, listType);
-        return dtoExpenseList;
+            output.add(dto);
+        }
+        return output;
     }
 
-    public ExpenseOutputDto getExpenseById(Long id){
-        Expenses expenses=expenseRepository.findById(id).orElseThrow(() -> new RuntimeException());
-        return modelMapper.map(expenses,ExpenseOutputDto.class);
+    public ExpenseOutputDto getExpenseById(Long id) {
+        Expenses expenses = expenseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        ExpenseOutputDto map = modelMapper.map(expenses, ExpenseOutputDto.class);
+        map.setCategoryId(expenses.getCategory().getId());
+        map.setCategoryName(expenses.getCategory().getName());
+        return map;
     }
 
-    public ExpenseOutputDto createExpense(ExpenseInputDto input){
+    public ExpenseOutputDto createExpense(ExpenseInputDto input) {
 //        Expenses expense = new Expenses();
 //        expense.setExpenseDate(input.getExpenseDate());
 //        expense.setAmount(input.getAmount());
@@ -71,12 +78,17 @@ public class ExpenseServiceImpl implements ExpenseService {
 //
 //        return output;
 
-        Expenses expenses=modelMapper.map(input, Expenses.class);
-        expenses=expenseRepository.save(expenses);
-        return modelMapper.map(expenses, ExpenseOutputDto.class);
+        Expenses expenses = modelMapper.map(input, Expenses.class);
+        Category category = categoryRepository.findById(input.getCategoryId()).get();
+        expenses.setCategory(category);
+        expenses = expenseRepository.save(expenses);
+        ExpenseOutputDto output = modelMapper.map(expenses, ExpenseOutputDto.class);
+        output.setCategoryId(expenses.getCategory().getId());
+        output.setCategoryName(expenses.getCategory().getName());
+        return output;
     }
 
-    public ExpenseOutputDto deleteExpense(Long id){
+    public ExpenseOutputDto deleteExpense(Long id) {
         Expenses expense = expenseRepository.findById(id).orElseThrow(() -> new RuntimeException());
         expenseRepository.delete(expense);
         return modelMapper.map(expense, ExpenseOutputDto.class);
@@ -84,11 +96,16 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     public ExpenseOutputDto updateExpense(Long id, ExpenseInputDto input) {
 
-        Expenses expenses1 = expenseRepository.findById(id).orElseThrow(()->new RuntimeException());
-        Expenses expenses2 = modelMapper.map(input, Expenses.class);
-        modelMapper.map(expenses2,expenses1);
-        expenses1=expenseRepository.save(expenses1);
-        return modelMapper.map(expenses1, ExpenseOutputDto.class);
+        Expenses expenses = expenseRepository.findById(id).orElseThrow(() -> new RuntimeException());
+        modelMapper.map(input, expenses);
+        Category category = categoryRepository.findById(input.getCategoryId()).get();
+        expenses.setCategory(category);
+        expenses = expenseRepository.save(expenses);
+        ExpenseOutputDto output = modelMapper.map(expenses, ExpenseOutputDto.class);
+        output.setCategoryId(expenses.getCategory().getId());
+        output.setCategoryName(expenses.getCategory().getName());
+        return output;
+
     }
 
 

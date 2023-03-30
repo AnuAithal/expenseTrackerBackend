@@ -10,6 +10,6 @@ public class ExpenseOutputDto {
     private LocalDateTime expenseDate;
     private String description;
     private String amount;
-    private Category category;
-    private UserOutputDto user;
+    private Long categoryId;
+    private String categoryName;
 }
