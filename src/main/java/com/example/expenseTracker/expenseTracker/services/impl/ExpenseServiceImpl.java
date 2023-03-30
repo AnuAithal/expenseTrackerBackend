@@ -83,10 +83,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     public ExpenseOutputDto updateExpense(Long id, ExpenseInputDto input) {
-        Expenses expense = expenseRepository.findById(id).orElseThrow(()->new RuntimeException());
-        modelMapper.map(input, Expenses.class);
-        expense=expenseRepository.save(expense);
-        return modelMapper.map(expense, ExpenseOutputDto.class);
+
+        Expenses expenses1 = expenseRepository.findById(id).orElseThrow(()->new RuntimeException());
+        Expenses expenses2 = modelMapper.map(input, Expenses.class);
+        modelMapper.map(expenses2,expenses1);
+        expenses1=expenseRepository.save(expenses1);
+        return modelMapper.map(expenses1, ExpenseOutputDto.class);
     }
 
 

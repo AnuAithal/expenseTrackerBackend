@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/expenses")
+@CrossOrigin
 @Data
 public class ExpenseController {
 
