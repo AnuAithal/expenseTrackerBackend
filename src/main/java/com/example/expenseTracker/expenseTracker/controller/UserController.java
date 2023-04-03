@@ -1,5 +1,7 @@
 package com.example.expenseTracker.expenseTracker.controller;
 
+import com.example.expenseTracker.expenseTracker.dto.LoginInputDto;
+import com.example.expenseTracker.expenseTracker.dto.LoginOutputDto;
 import com.example.expenseTracker.expenseTracker.dto.UserInputDto;
 import com.example.expenseTracker.expenseTracker.dto.UserOutputDto;
 import com.example.expenseTracker.expenseTracker.model.Category;
@@ -42,5 +44,10 @@ public class UserController {
         return userService.createUser(input);
     }
 
+    @PostMapping("/login")
+    public LoginOutputDto login(@RequestBody LoginInputDto loginInputDto)
+    {
+        return userService.login(loginInputDto);
+    }
 
 }
