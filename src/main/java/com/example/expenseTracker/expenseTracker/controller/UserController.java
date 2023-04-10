@@ -41,6 +41,7 @@ public class UserController {
 
     @PostMapping()
     public UserOutputDto createUser(@RequestBody UserInputDto input){
+
         return userService.createUser(input);
     }
 

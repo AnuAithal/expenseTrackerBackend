@@ -12,7 +12,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 @RestController
-
+@CrossOrigin
 @RequestMapping("/categories")
 @RequiredArgsConstructor
 public class CategoryController {

@@ -22,7 +22,7 @@ public class User {
     private Long id;
     @Column
     @NotEmpty
-    @Size(min=4,message="Username must be min of 4 characters")
+    @Size(min=3,message="Username must be min of 4 characters")
     private String name;
     @Column
     @Email(message="Email address is not valid !!")

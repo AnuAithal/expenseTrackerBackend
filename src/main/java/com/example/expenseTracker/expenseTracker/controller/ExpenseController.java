@@ -53,6 +53,10 @@ public class ExpenseController {
         return expenseService.updateExpense(id, input);
     }
 
+    @GetMapping("/user/{id}")
+    public ExpenseOutputDto getExpenseByUserId(@PathVariable Long id){
+        return expenseService.getExpenseByUserId(id);
+    }
 
 
 }

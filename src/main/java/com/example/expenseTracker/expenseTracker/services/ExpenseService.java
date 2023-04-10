@@ -17,5 +17,8 @@ public interface ExpenseService {
     public ExpenseOutputDto deleteExpense(Long id);
     public ExpenseOutputDto updateExpense(Long id,ExpenseInputDto input);
 
+    public ExpenseOutputDto getExpenseByUserId(Long id);
+
+
 
 }

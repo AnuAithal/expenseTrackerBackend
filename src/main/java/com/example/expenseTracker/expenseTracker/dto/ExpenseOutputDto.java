@@ -12,4 +12,5 @@ public class ExpenseOutputDto {
     private String amount;
     private Long categoryId;
     private String categoryName;
+//    private Long userId;
 }

@@ -13,4 +13,5 @@ public class ExpenseInputDto {
     private String description;
     private String amount;
     private Long categoryId;
+//    private Long userId;
 }
