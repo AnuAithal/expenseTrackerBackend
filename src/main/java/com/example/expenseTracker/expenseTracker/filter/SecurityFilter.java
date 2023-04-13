@@ -3,6 +3,7 @@ package com.example.expenseTracker.expenseTracker.filter;
 import java.io.IOException;
 
 import com.example.expenseTracker.expenseTracker.utils.CurrentUser;
+import com.google.api.Http;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -35,11 +36,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         } else {
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             HttpMethod method = HttpMethod.valueOf(request.getMethod());
-
+            String requestURI = request.getRequestURI();
 
             if (method.equals(HttpMethod.OPTIONS)) {
                 filterChain.doFilter(request, response);
-            } else if (false) {//we need to check public api or not
+            } else if (isPublicApi(requestURI, method)) {//we need to check public api or not
                 filterChain.doFilter(request, response);
             } else {
                 if (StringUtils.isNotBlank(token) && (token.startsWith("Bearer "))) {
@@ -63,6 +64,12 @@ public class SecurityFilter extends OncePerRequestFilter {
             }
         }
     }
-	
+
+    private boolean isPublicApi(String requestUri, HttpMethod httpMethod){
+        if(requestUri.equals("/users/login") && httpMethod.equals(HttpMethod.POST)){
+            return true;
+        }
+        return false;
+    }
 	}
 

@@ -2,6 +2,8 @@ package com.example.expenseTracker.expenseTracker.controller;
 
 import com.example.expenseTracker.expenseTracker.dto.ExpenseInputDto;
 import com.example.expenseTracker.expenseTracker.dto.ExpenseOutputDto;
+import com.example.expenseTracker.expenseTracker.dto.ReccurExpenseInputDto;
+import com.example.expenseTracker.expenseTracker.dto.ReccurExpenseOutputDto;
 import com.example.expenseTracker.expenseTracker.model.Expenses;
 import com.example.expenseTracker.expenseTracker.repository.ExpenseRepository;
 import com.example.expenseTracker.expenseTracker.services.ExpenseService;
@@ -48,15 +50,15 @@ public class ExpenseController {
         return expenseService.deleteExpense(id);
     }
 
+
     @PutMapping("/{id}")
     public ExpenseOutputDto updateExpense(@PathVariable Long id, @RequestBody ExpenseInputDto input){
         return expenseService.updateExpense(id, input);
     }
 
-    @GetMapping("/user/{id}")
-    public ExpenseOutputDto getExpenseByUserId(@PathVariable Long id){
-        return expenseService.getExpenseByUserId(id);
+    @PostMapping("/reccuring")
+    public ReccurExpenseOutputDto createReccurExpense(@RequestBody ReccurExpenseInputDto input){
+        return expenseService.createReccurExpense(input);
     }
-
 
 }

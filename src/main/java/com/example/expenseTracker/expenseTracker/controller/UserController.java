@@ -24,6 +24,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 @Data
 @RequiredArgsConstructor
+@CrossOrigin
 public class UserController {
 
     private final UserRepository userRepository;
