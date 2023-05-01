@@ -36,8 +36,8 @@ public class User {
 
     @Column
     private String firebaseId;
-//   @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL)
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private List<Category> categories;
+   @OneToMany(targetEntity = Category.class, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<Category> categories;
 
 }
